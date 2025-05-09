@@ -6,6 +6,11 @@ import * as bcrypt from 'bcryptjs';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/database/prisma.service';
 import { TestPrismaService } from './test-prisma.service';
+import { MockAwsS3Provider } from './mocks/mock-aws-s3.provider';
+import { MockGcpStorageProvider } from './mocks/mock-gcp-storage.provider';
+import { AwsS3Provider } from '../src/storage/providers/aws-s3.provider';
+import { GcpStorageProvider } from '../src/storage/providers/gcp-storage.provider';
+
 
 /**
  * Interface for creating test users
@@ -33,6 +38,10 @@ export async function setupTestApp(): Promise<{
   })
   .overrideProvider(PrismaService)
   .useClass(TestPrismaService)
+  .overrideProvider(AwsS3Provider)
+  .useClass(MockAwsS3Provider)
+  .overrideProvider(GcpStorageProvider)
+  .useClass(MockGcpStorageProvider)
   .compile();
 
   const app = moduleFixture.createNestApplication();

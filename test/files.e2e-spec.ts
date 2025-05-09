@@ -28,19 +28,16 @@ describe('Files Controller (e2e)', () => {
     password: 'Password123'
   };
 
-  // Create a test file
   const testFilePath = path.join(__dirname, 'test-file.txt');
   const testFileContent = 'This is a test file content';
 
   beforeAll(async () => {
-    // Create test file
+
     fs.writeFileSync(testFilePath, testFileContent);
     
-    // Override DATABASE_URL for all tests
     process.env.DATABASE_URL = process.env.TEST_DATABASE_URL || 
       'postgresql://postgres:postgres@localhost:5433/cloud_challenge_test';
 
-    // Configure the test module with mocked storage providers
     const moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
     })
@@ -50,7 +47,6 @@ describe('Files Controller (e2e)', () => {
     .useClass(MockGcpStorageProvider)
     .compile();
 
-    // Use our setupTestApp utility to create the application
     const testEnv = await setupTestApp();
     app = testEnv.app;
     prismaService = testEnv.prismaService;
@@ -85,7 +81,6 @@ describe('Files Controller (e2e)', () => {
   });
 
   afterAll(async () => {
-    // Remove test file
     if (fs.existsSync(testFilePath)) {
       fs.unlinkSync(testFilePath);
     }
@@ -107,7 +102,6 @@ describe('Files Controller (e2e)', () => {
       expect(response.body.originalName).toBe('test-file.txt');
       expect(response.body.size).toBeDefined();
       
-      // Save file id for later tests
       testFileId = response.body.id;
     });
 
