@@ -1,0 +1,65 @@
+# Node modules
+node_modules/
+
+# Local logs
+*.log
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Git files
+.git
+.gitignore
+
+# Editor files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Build output
+dist/
+build/
+coverage/
+test/
+.nyc_output/
+
+# IMPORTANT: Allow Prisma generated client
+!generated/
+
+# Mac/Unix metadata
+.DS_Store
+
+# NPM config
+.npm
+.npmrc
+
+# Docker itself
+Dockerfile
+docker-compose.yml
+
+# Prisma migrations (optional, unless you build from schema)
+/prisma/migrations/
+
+# Temporary
+tmp/
+temp/
+
+# Sensitive files (ignored by Docker, NOT by Git)
+*.pem
+*.key
+*.secret
+**/credentials.json
+**/gcp-credentials.json
+src/config/*.json
+
+# dotenv - allow needed env files
+.env
+!.env.development
+!.env.example
+# Still ignore other env files
+.env.local
+.env.*.local

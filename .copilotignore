@@ -1,0 +1,14 @@
+# Ignore dotenv secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Credential files
+**/credentials.json
+**/gcp-credentials.json
+
+# Other sensitive info
+**/*.secret
+**/secrets/*
+src/config/*.json
