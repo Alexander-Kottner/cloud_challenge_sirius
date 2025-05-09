@@ -259,17 +259,15 @@ describe('Storage Service Fallback (e2e)', () => {
       await app.close();
     });
 
-    it('should fallback to GCP provider for download when AWS download fails', async () => {
-      // Attempt download - AWS will fail but should fallback to GCP
+    it('should return service unavailable when AWS download fails', async () => {
+      // Attempt download - AWS will fail and should return service unavailable
       const downloadResponse = await request(app.getHttpServer())
         .get(`/files/download/${uploadedFileId}`)
         .set('Authorization', `Bearer ${jwtToken}`)
-        .expect(200);
+        .expect(503); // Service Unavailable status code
         
-      // The fact that we got a 200 response means the fallback worked
-      // We can check the content-type and content-length headers to verify it's a proper file
-      expect(downloadResponse.headers['content-type']).toBeDefined();
-      expect(downloadResponse.headers['content-disposition']).toContain('attachment');
+      // Verify error message mentions email delivery
+      expect(downloadResponse.body.message).toContain('sent to your registered email');
     });
   });
 });

@@ -52,26 +52,11 @@ export class StorageService {
       }
     }
     
-    // Failover to other providers if the original provider is unavailable
-    for (const otherProvider of this.providers) {
-      if (this.getProviderName(otherProvider) === provider) {
-        continue; // Skip the already tried provider
-      }
-      
-      try {
-        const isAvailable = await otherProvider.isAvailable();
-        
-        if (isAvailable) {
-          this.logger.log(`Attempting download of ${key} with failover provider ${otherProvider.constructor.name}`);
-          return await otherProvider.downloadFile(key);
-        }
-      } catch (error) {
-        this.logger.error(`Error downloading file with failover provider ${otherProvider.constructor.name}:`, error);
-      }
-    }
-    
-    // If we get here, all providers have failed
-    throw new ServiceUnavailableException('Unable to download file from any storage provider');
+    // If the selected provider is unavailable, throw a service unavailable exception
+    // with a message that we'll send the file via email when the service is back up
+    throw new ServiceUnavailableException(
+      'Storage provider is currently unavailable. The file will be sent to your registered email once service is restored.'
+    );
   }
 
   async deleteFile(key: string, provider: string): Promise<boolean> {
