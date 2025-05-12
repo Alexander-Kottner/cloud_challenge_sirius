@@ -10,7 +10,7 @@ import { UsersModule } from '../users/users.module';
   imports: [
     MulterModule.register({
       limits: {
-        fileSize: 10 * 1024 * 1024, // 10MB upload limit
+        fileSize: 100 * 1024 * 1024,
       },
     }),
     StorageModule,
