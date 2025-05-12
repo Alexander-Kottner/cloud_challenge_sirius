@@ -40,7 +40,8 @@ export class UsersService {
       where: { id: userId },
       select: { 
         monthlyUsage: true,
-        nextQuotaResetDate: true
+        nextQuotaResetDate: true,
+        maxStorageCapacity: true,
       },
     });
 
@@ -61,7 +62,7 @@ export class UsersService {
       throw new BadRequestException('User not found after quota reset check');
     }
     const usageInBytes = Number(freshUser.monthlyUsage);
-    const maxStorageInBytes = 5 * 1024 * 1024 * 1024; // 5GB in bytes
+    const maxStorageInBytes = Number(user.maxStorageCapacity)
     
     return (usageInBytes + fileSize) <= maxStorageInBytes;
   }

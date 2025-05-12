@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
 import { UsersService } from '../../src/users/users.service';
 import { PrismaService } from '../../src/database/prisma.service';
+import { max } from 'class-validator';
 
 describe('UsersService', () => {
   let usersService: UsersService;
@@ -112,11 +113,13 @@ describe('UsersService', () => {
       mockPrismaService.user.findUnique.mockResolvedValueOnce({
         monthlyUsage: BigInt(1000000), // 1MB
         nextQuotaResetDate: new Date(Date.now() + 86400000), // Tomorrow
+        maxStorageCapacity: BigInt(5 * 1024 * 1024 * 1024), // 5GB
       });
 
       // Second call for fresh user data after potential reset
       mockPrismaService.user.findUnique.mockResolvedValueOnce({
         monthlyUsage: BigInt(1000000), // 1MB
+        maxStorageCapacity: BigInt(5 * 1024 * 1024 * 1024), // 5GB
       });
       
       const fileSize = 1000000; // 1MB
@@ -155,6 +158,7 @@ describe('UsersService', () => {
       mockPrismaService.user.findUnique.mockResolvedValueOnce({
         monthlyUsage: BigInt(1000000), // 1MB
         nextQuotaResetDate: pastDate,
+        maxStorageCapacity: BigInt(5 * 1024 * 1024 * 1024), // 5GB
       });
 
       // Mock the update call that would happen during reset
@@ -163,6 +167,7 @@ describe('UsersService', () => {
       // Second call for fresh user data after reset
       mockPrismaService.user.findUnique.mockResolvedValueOnce({
         monthlyUsage: BigInt(0), // Should be reset to 0
+        nextQuotaResetDate: new Date(Date.now() + 86400000), // Tomorrow
       });
       
       const fileSize = 1000000; // 1MB

@@ -2,27 +2,20 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Install bash (needed for wait-for-it)
 RUN apk add --no-cache bash
 
-# Copy only package files and prisma schema first (layer optimization)
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install dependencies early to leverage Docker cache
 RUN npm install
 
-# Copy the rest of the application
 COPY . .
 
-# Generate the Prisma client at build time
 RUN npx prisma generate
 
-# Add wait-for-it script for DB health check
 ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /wait-for-it.sh
 RUN chmod +x /wait-for-it.sh
 
-# Optional envs for fallback/debug
 ENV PORT=3000
 
 EXPOSE 3000

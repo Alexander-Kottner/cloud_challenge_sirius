@@ -23,6 +23,7 @@ model User {
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
   monthlyUsage       BigInt    @default(0) // Storage usage in bytes
+  maxStorageCapacity BigInt    @default(5368709120) // 5GB in bytes (5 * 1024 * 1024 * 1024)
   nextQuotaResetDate DateTime  // Date when the user's quota will be reset next
   files              File[]
   usageHistory       UsageHistory[]
